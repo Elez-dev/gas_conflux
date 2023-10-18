@@ -1,4 +1,4 @@
-[![Typing SVG](https://readme-typing-svg.demolab.com?font=Fira+Code&pause=1000&random=false&width=435&lines=%D0%9D%D0%B0%D0%B1%D0%B8%D0%B2%D0%B0%D0%B5%D0%BC+%D0%B4%D0%B5%D1%88%D1%91%D0%B2%D1%8B%D0%B5+%D1%82%D1%80%D0%B0%D0%BD%D0%B7%D1%8B+%D0%B2+L0+%D1%87%D0%B5%D1%80%D0%B5%D0%B7+Merkly)](https://git.io/typing-svg)
+[![Typing SVG](https://readme-typing-svg.demolab.com?font=Fira+Code&pause=1000&random=false&width=535&lines=%D0%9D%D0%B0%D0%B1%D0%B8%D0%B2%D0%B0%D0%B5%D0%BC+%D0%B4%D0%B5%D1%88%D1%91%D0%B2%D1%8B%D0%B5+%D1%82%D1%80%D0%B0%D0%BD%D0%B7%D1%8B+%D0%B2+L0+%D1%87%D0%B5%D1%80%D0%B5%D0%B7+Merkly)](https://git.io/typing-svg)
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -15,8 +15,15 @@
 Всё настраиваем в файле main.py
 
 shuffle_wallets — изменяет порядок кошельков
+
+number_of_transactions_min - Минимальное количество транзакций
+
+number_of_transactions_max - Максимальное количество транзакций
+
 amount_from = 0.0000001 — минимальная сумма получения
+
 amount_to   = 0.00001 — максимальная сумма получения
+
 amount_decimal = 9  — округление отправляемых средств
 
 time_delay_min = 50 — минимальная задержка между транзакциями
