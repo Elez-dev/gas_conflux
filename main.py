@@ -16,12 +16,15 @@ rpc_polygon = 'https://rpc.ankr.com/polygon'
 
 shuffle_wallets = True                 # мешать кошельки
 
+number_of_transactions_min = 2         # Минимальное и
+number_of_transactions_max = 2         # Максимальное количество транзакций
+
 amount_from = 0.0000001                # Минимальная и
 amount_to   = 0.00001                  # Максимальная сумма получения
 amount_decimal = 9                     # округление
 
-time_delay_min = 50                    # Максимальная и
-time_delay_max = 100                   # Минимальная задержка между транзакциями
+time_delay_min = 100                   # Максимальная и
+time_delay_max = 150                   # Минимальная задержка между транзакциями
 
 TIME_DELAY_MIN = 5                     # Минимальное и
 TIME_DELAY_MAX = 10                    # Максимальное время задержки между потокам
@@ -92,9 +95,13 @@ class Worker(Thread):
             str_number = f'{number} / {all_wallets}'
 
             merkl = Merkly(private_key, web3, str_number, log)
-            amount = round(random.uniform(amount_from, amount_to), amount_decimal)
-            merkl.get_gas(amount)
-            sleep(time_delay_min, time_delay_max)
+            number_of_transactions = random.randint(number_of_transactions_min, number_of_transactions_max)
+            log.info(f'Количество транзакций - {number_of_transactions}\n')
+            for i in range(number_of_transactions):
+                log.info(f'Транзакция #{i+1}')
+                amount = round(random.uniform(amount_from, amount_to), amount_decimal)
+                merkl.get_gas(amount)
+                sleep(time_delay_min, time_delay_max)
             session.close()
 
 
