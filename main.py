@@ -16,8 +16,8 @@ rpc_polygon = 'https://rpc.ankr.com/polygon'
 
 shuffle_wallets = True                 # мешать кошельки
 
-number_of_transactions_min = 2         # Минимальное и
-number_of_transactions_max = 2         # Максимальное количество транзакций
+number_of_transactions_min = 1         # Минимальное и
+number_of_transactions_max = 1         # Максимальное количество транзакций
 
 amount_from = 0.0000001                # Минимальная и
 amount_to   = 0.00001                  # Максимальная сумма получения
@@ -28,6 +28,9 @@ time_delay_max = 150                   # Минимальная задержка
 
 TIME_DELAY_MIN = 5                     # Минимальное и
 TIME_DELAY_MAX = 10                    # Максимальное время задержки между потокам
+
+TIME_DELAY_ACC_MIN = 500               # Минимальное и
+TIME_DELAY_ACC_MAX = 1000              # Максимальное время задержки между АККАУНТАМИ
 
 number_of_threads = 1                  # Количество потоков
 
@@ -103,6 +106,9 @@ class Worker(Thread):
                 merkl.get_gas(amount)
                 sleep(time_delay_min, time_delay_max)
             session.close()
+            delay = random.randint(TIME_DELAY_ACC_MIN, TIME_DELAY_ACC_MAX)
+            log.info(f'Аккаунт завершен, сплю {delay} секунд и перехожу к следующему')
+            time.sleep(delay)
 
 
 if __name__ == '__main__':
