@@ -13,11 +13,15 @@ import logging
 # Settings ---------------------------------------------------------------
 
 rpc_polygon = 'https://rpc.ankr.com/polygon'
+rpc_celo    = 'https://rpc.ankr.com/celo'
+
+CELO_CHAIN    = True
+POLYGON_CHAIN = True
 
 shuffle_wallets = True                 # мешать кошельки
 
-number_of_transactions_min = 1         # Минимальное и
-number_of_transactions_max = 1         # Максимальное количество транзакций
+number_of_transactions_min = 10         # Минимальное и
+number_of_transactions_max = 20         # Максимальное количество транзакций
 
 amount_from = 0.0000001                # Минимальная и
 amount_to   = 0.00001                  # Максимальная сумма получения
@@ -84,12 +88,28 @@ class Worker(Thread):
             private_key = account[1]
             retries = Retry(total=10, backoff_factor=1, status_forcelist=[500, 502, 503, 504])
             adapter = requests.adapters.HTTPAdapter(max_retries=retries)
+
+            web3_arr = []
+
             session = requests.Session()
             session.mount('http://', adapter)
             session.mount('https://', adapter)
-            web3 = Web3(Web3.HTTPProvider(rpc_polygon, request_kwargs={'timeout': 60}, session=session))
-            web3.middleware_onion.inject(geth_poa_middleware, layer=0)
-            address = web3.eth.account.from_key(private_key).address
+            web3_polygon = Web3(Web3.HTTPProvider(rpc_polygon, request_kwargs={'timeout': 60}, session=session))
+            web3_polygon.middleware_onion.inject(geth_poa_middleware, layer=0)
+
+            if POLYGON_CHAIN is True:
+                web3_arr.append(web3_polygon)
+
+            session1 = requests.Session()
+            session1.mount('http://', adapter)
+            session1.mount('https://', adapter)
+            web3_celo = Web3(Web3.HTTPProvider(rpc_celo, request_kwargs={'timeout': 60}, session=session1))
+            web3_celo.middleware_onion.inject(geth_poa_middleware, layer=0)
+
+            if CELO_CHAIN is True:
+                web3_arr.append(web3_celo)
+
+            address = web3_polygon.eth.account.from_key(private_key).address
 
             log.info('----------------------------------------------------------------------------')
             log.info(f'|   Сейчас работает аккаунт - {address}   |')
@@ -97,10 +117,17 @@ class Worker(Thread):
 
             str_number = f'{number} / {all_wallets}'
 
-            merkl = Merkly(private_key, web3, str_number, log)
             number_of_transactions = random.randint(number_of_transactions_min, number_of_transactions_max)
             log.info(f'Количество транзакций - {number_of_transactions}\n')
+
             for i in range(number_of_transactions):
+                web3 = random.choice(web3_arr)
+                if web3 == web3_polygon:
+                    name = 'Polygon'
+                else:
+                    name = 'Celo'
+
+                merkl = Merkly(name, private_key, web3, str_number, log)
                 log.info(f'Транзакция #{i+1}')
                 amount = round(random.uniform(amount_from, amount_to), amount_decimal)
                 merkl.get_gas(amount)
